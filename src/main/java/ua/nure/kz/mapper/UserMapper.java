@@ -15,12 +15,12 @@ public class UserMapper {
 	public UserMapper() {
 		modelMapper = new ModelMapper();
 		
-		modelMapper.addMappings(new PropertyMap<User, UserDTO>() {
+		/*modelMapper.addMappings(new PropertyMap<User, UserDTO>() {
 			protected void configure() {
 				map().setFullName(source.getName());
 				map().setId(source.getId());
 			}
-		});
+		});*/
 	}
 	
 	
