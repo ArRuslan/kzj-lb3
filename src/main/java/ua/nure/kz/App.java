@@ -1,4 +1,4 @@
-package com.my;
+package ua.nure.kz;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

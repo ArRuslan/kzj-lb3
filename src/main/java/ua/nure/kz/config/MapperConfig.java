@@ -1,9 +1,9 @@
-package com.my.config;
+package ua.nure.kz.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.my.mapper.UserMapper;
+import ua.nure.kz.mapper.UserMapper;
 
 @Configuration
 public class MapperConfig {

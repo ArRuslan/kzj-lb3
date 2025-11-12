@@ -1,4 +1,4 @@
-package com.my.dto;
+package ua.nure.kz.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

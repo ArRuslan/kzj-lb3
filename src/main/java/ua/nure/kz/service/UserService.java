@@ -1,13 +1,13 @@
-package com.my.service;
+package ua.nure.kz.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.my.dto.UserDTO;
-import com.my.mapper.UserMapper;
-import com.my.model.User;
-import com.my.repository.UserRepository;
+import ua.nure.kz.dto.UserDTO;
+import ua.nure.kz.mapper.UserMapper;
+import ua.nure.kz.model.User;
+import ua.nure.kz.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

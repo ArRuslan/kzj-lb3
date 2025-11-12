@@ -1,4 +1,4 @@
-package com.my.model;
+package ua.nure.kz.model;
 
 import jakarta.persistence.*;
 import lombok.*;

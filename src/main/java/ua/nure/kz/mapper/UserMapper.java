@@ -1,12 +1,12 @@
-package com.my.mapper;
+package ua.nure.kz.mapper;
 
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
-import com.my.dto.UserDTO;
-import com.my.model.User;
+import ua.nure.kz.dto.UserDTO;
+import ua.nure.kz.model.User;
 
 public class UserMapper {
 	

@@ -1,4 +1,4 @@
-package com.my.controller;
+package ua.nure.kz.controller;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.my.dto.UserDTO;
-import com.my.service.UserService;
+import ua.nure.kz.dto.UserDTO;
+import ua.nure.kz.service.UserService;
 
 @Controller // <-- @Component
 public class UserController {
