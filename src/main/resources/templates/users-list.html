@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User List</title>
+    <style>
+        .user-list {
+            display: flex ;
+            flex-direction: column;                        
+        }
+
+        .user-header, .user-row {
+            display: flex;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .user-header {
+            font-weight: bold;
+            background-color: #f4f4f4;
+        }
+
+        .user-cell {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .no-users {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<h2>User List</h2>
+
+<div class="user-list" th:if="${users}">
+    <div class="user-header">
+        <div class="user-cell">ID</div>
+        <div class="user-cell">Name</div>
+        <div class="user-cell">Email</div>
+    </div>
+
+    <div class="user-row" th:each="user : ${users}">
+        <div class="user-cell" th:text="${user.id}">id</div>
+        <div class="user-cell" th:text="${user.login}">login</div>
+        <div class="user-cell" th:text="${user.fullName}">fullName</div>
+    </div>
+</div>
+
+<div class="no-users" th:if="${users.isEmpty()}">
+    No users found.
+</div>
+
+<hr/>
+
+</body>
+</html>
