@@ -2,6 +2,9 @@ package ua.nure.kz.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ua.nure.kz.dto.UserDTO;
@@ -14,17 +17,42 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-	
+	private static final Sort SORT_BY_ID_ASC = Sort.by(Sort.Direction.ASC, "id");
+
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
-	
+
 	public UserDTO findUserByLogin(String login) {
 		User user = userRepository.findUserByLogin(login) ;
-		return userMapper.toDTO(user);
+		return user == null ? null : userMapper.toDTO(user);
 	}
 
-	public List<UserDTO> findAllUsers() {
-		return userMapper.toDTOList(userRepository.findAll());
+	public UserDTO findUserById(long id) {
+		User user = userRepository.findUserById(id) ;
+		return user == null ? null : userMapper.toDTO(user);
 	}
 
+	public long getUserCount() {
+		return userRepository.count();
+	}
+
+	public List<UserDTO> getUsers(int page, int pageSize) {
+		return userMapper.toDTOList(userRepository.findAll(PageRequest.of(page, pageSize, SORT_BY_ID_ASC)).toList());
+	}
+
+	public User createUser(User user) {
+		return userRepository.save(user);
+	}
+
+	public User updateUser(User user) {
+		return userRepository.save(user);
+	}
+
+	public void deleteUser(User user) {
+		userRepository.delete(user);
+	}
+
+	public void deleteUser(long userId) {
+		userRepository.deleteById(userId);
+	}
 }

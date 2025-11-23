@@ -1,16 +1,15 @@
 package ua.nure.kz.mapper;
 
 import org.modelmapper.ModelMapper;
-import ua.nure.kz.dto.UserDTO;
-import ua.nure.kz.model.User;
+import ua.nure.kz.dto.GroupDTO;
+import ua.nure.kz.model.Group;
 
 import java.util.List;
-
-public class UserMapper {
+public class GroupMapper {
 
     private final ModelMapper modelMapper;
 
-    public UserMapper() {
+    public GroupMapper() {
         modelMapper = new ModelMapper();
 		
 		/*modelMapper.addMappings(new PropertyMap<User, UserDTO>() {
@@ -22,16 +21,16 @@ public class UserMapper {
     }
 
 
-    public UserDTO toDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
+    public GroupDTO toDTO(Group group) {
+        return modelMapper.map(group, GroupDTO.class);
     }
 
-    public User toEntity(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
+    public Group toEntity(GroupDTO groupDTO) {
+        return modelMapper.map(groupDTO, Group.class);
     }
 
-    public List<UserDTO> toDTOList(List<User> users) {
-        return users.stream()
+    public List<GroupDTO> toDTOList(List<Group> groups) {
+        return groups.stream()
                 .map(this::toDTO)
                 .toList();
     }
