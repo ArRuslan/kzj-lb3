@@ -8,6 +8,6 @@ import lombok.*;
 @ToString
 @Builder
 public class GroupDTO {
-    private int id;
+    private long id;
     private String name;
 }

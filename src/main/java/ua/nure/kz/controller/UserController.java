@@ -2,16 +2,17 @@ package ua.nure.kz.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.nure.kz.dto.UserDTO;
 import ua.nure.kz.mapper.UserMapper;
+import ua.nure.kz.model.User;
 import ua.nure.kz.service.UserService;
 import ua.nure.kz.utils.SessionUtil;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Controller
@@ -23,8 +24,7 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    // http://localhost:8080/hello
-    @RequestMapping("")
+    @GetMapping("")
     public String usersList(
             Model model, HttpServletRequest request,
             @RequestParam(name = "page", defaultValue = "1", required = false) int page,
@@ -40,26 +40,35 @@ public class UserController {
         return "users-list";
     }
 
-    @RequestMapping("/test")
-    @ResponseBody
-    public String test(@RequestParam("login") String login) {
-        UserDTO userDTO = userService.findUserByLogin(login);
-        return userDTO.toString();
-    }
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createUser(
+            Model model, HttpServletRequest request,
+            @RequestParam("login") String login,
+            @RequestParam("password") String password,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("role") User.Role role) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            model.addAttribute("error", "Insufficient privileges!");
+            return "users-list";
+        }
 
-    // http://localhost:8080/test2 ==> /src/main/resources/templates/test2.html
-    @RequestMapping("/test2")
-    public String test2(Model model, @RequestParam("login") String login) {
-        UserDTO userDTO = userService.findUserByLogin(login);
-        model.addAttribute("user", userDTO);
-        return "test2";
-    }
+        User userToCreate = new User();
+        userToCreate.setLogin(login);
+        try {
+            userToCreate.setPassword(User.hashPassword(password));
+        } catch (NoSuchAlgorithmException e) {
+            model.addAttribute("error", "Failed to create user!");
+            return "users-list";
+        }
+        userToCreate.setFullName(fullName);
+        userToCreate.setRole(role);
 
-    @RequestMapping("/find-all-users")
-    public String findAllUsers(Model model) {
-        List<UserDTO> users = userService.getUsers(1, 10);
-        model.addAttribute("users", users);
-        return "users-list";
-    }
+        userService.createUser(userToCreate);
 
+        return "redirect:/users";
+    }
 }

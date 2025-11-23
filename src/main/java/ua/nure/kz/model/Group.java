@@ -21,6 +21,6 @@ public class Group {
 	@Column(unique = true, nullable = false)
 	private String name;
 
-	@ManyToMany(mappedBy = "groups")
-	private Set<User> users;
+	/*@ManyToMany(mappedBy = "groups")
+	private Set<User> users;*/
 }

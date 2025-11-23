@@ -1,3 +1,6 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{ layout :: head(~{::title}) }">
@@ -16,7 +19,10 @@
             <input name="login" placeholder="Login" class="form-control" />
             <input name="password" placeholder="Password" type="password" class="form-control" />
             <input name="fullName" placeholder="Full Name" class="form-control" />
-            <input name="role" placeholder="Role" class="form-control" />
+            <select name="role" class="form-control">
+                <option value="USER" selected>User</option>
+                <option value="Admin">Administrator</option>
+            </select>
 
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -36,14 +42,14 @@
         </thead>
 
         <tbody>
-        <th:block th:each="user, status : ${users}">
+        <th:block th:each="listUser : ${users}">
             <tr>
-                <td scope="row" th:text="${user.getId()}">User ID</td>
-                <td th:text="${user.getLogin()}">User Login</td>
-                <td th:text="${user.getFullName()}">User Full Name</td>
+                <td scope="row" th:text="${listUser.id}">User ID</td>
+                <td th:text="${listUser.login}">User Login</td>
+                <td th:text="${listUser.fullName}">User Full Name</td>
                 <td>
-                    <th:block th:each="group : ${user.groups}">
-                        <a th:href="@{/users?groupId=${group.id}}" th:text="${status.last} ? ${group.name} : ${group.name} + ', '">
+                    <th:block th:each="group, status : ${listUser.groups}">
+                        <a th:href="@{/users(groupId=${group.id})}" th:text="${status.last} ? ${group.name} : ${group.name} + ', '">
                             Group Name
                         </a>
                     </th:block>
