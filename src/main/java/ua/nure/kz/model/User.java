@@ -3,6 +3,8 @@ package ua.nure.kz.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +32,10 @@ public class User {
 	@Setter
 	@Column(nullable = false)
 	private Role role;
+
+	@ManyToMany
+	@JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Set<Group> groups;
 
 	public enum Role {
 		USER,

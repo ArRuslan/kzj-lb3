@@ -3,6 +3,8 @@ package ua.nure.kz.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,4 +20,7 @@ public class Group {
 	@Setter
 	@Column(unique = true, nullable = false)
 	private String name;
+
+	@ManyToMany(mappedBy = "groups")
+	private Set<User> users;
 }
