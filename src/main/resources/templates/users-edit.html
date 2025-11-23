@@ -4,12 +4,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{ layout :: head(~{::title}) }">
-    <title th:text="Edit user ${target.login}"></title>
+    <title th:text="${'Edit user ' + target.login}"></title>
 </head>
 
 <body th:replace="~{ layout :: body(~{::#th-page-body})}">
 <div id="th-page-body">
-    <h2 th:text="Edit user ${target.login}">Edit user [User]</h2>
+    <h2>Edit user <th:block th:text="${target.login}">[User]</th:block></h2>
 
     <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
         Error
@@ -20,8 +20,8 @@
         <input name="new_password" placeholder="New Password" type="password" class="form-control" />
         <input name="fullName" placeholder="Full Name" th:value="${target.getFullName()}" class="form-control" required />
         <select name="role" class="form-control" required>
-            <option value="USER" th:selected="${target.isAdmin() ? '' : 'selected'}">User</option>
-            <option value="Admin" th:selected="${target.isAdmin() ? 'selected' : ''}">Administrator</option>
+            <option value="USER" th:selected="${!target.isAdmin()} ? 'selected'">User</option>
+            <option value="ADMIN" th:selected="${target.isAdmin()} ? 'selected'">Administrator</option>
         </select>
 
         <div class="btn-group d-flex" role="group">

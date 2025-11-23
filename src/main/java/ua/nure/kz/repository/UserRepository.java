@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.kz.model.User;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserById(long id);
 
+    @Transactional
     void deleteById(long id);
 
     @Query("SELECT u FROM User u JOIN u.groups g WHERE g.id = :group_id")

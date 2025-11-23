@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.nure.kz.dto.UserDTO;
 import ua.nure.kz.mapper.UserMapper;
 import ua.nure.kz.model.User;
+import ua.nure.kz.repository.UserRepository;
 import ua.nure.kz.service.UserService;
 import ua.nure.kz.utils.SessionUtil;
 
@@ -20,6 +21,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
 
@@ -71,8 +74,8 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("{userId}")
-    public String editUserGet(Model model, HttpServletRequest request, @PathVariable(name = "userId") long userId) {
+    @GetMapping("edit/{userId}")
+    public String editUserPage(Model model, HttpServletRequest request, @PathVariable(name = "userId") long userId) {
         UserDTO user = SessionUtil.getUserFromSession(request, userService);
         if(user == null) {
             return "redirect:/auth/login";
@@ -90,5 +93,82 @@ public class UserController {
         model.addAttribute("target", targetUser);
 
         return "users-edit";
+    }
+
+    @PostMapping(value = "edit/{userId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String editUser(
+            Model model, HttpServletRequest request,
+            @PathVariable(name = "userId") long userId,
+            @RequestParam("login") String login,
+            @RequestParam("new_password") String password,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("role") User.Role role) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        User targetUser = userRepository.findUserById(userId);
+        if(targetUser == null) {
+            return "redirect:/users";
+        }
+
+        if(targetUser.getLogin().equals(login) && targetUser.getFullName().equals(fullName) && password.isEmpty() && targetUser.getRole() == role) {
+            return "redirect:/users/edit/" + userId;
+        }
+
+        targetUser.setLogin(login);
+        targetUser.setFullName(fullName);
+        targetUser.setRole(role);
+        if(!password.isEmpty()) {
+            try {
+                targetUser.setPassword(User.hashPassword(password));
+            } catch (NoSuchAlgorithmException e) {
+                model.addAttribute("error", "Failed to create user!");
+                return "users-list";
+            }
+        }
+
+        userService.updateUser(targetUser);
+
+        return "redirect:/users/edit/" + userId;
+    }
+
+    @GetMapping("delete/{userId}")
+    public String deleteUserPage(Model model, HttpServletRequest request, @PathVariable(name = "userId") long userId) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        UserDTO targetUser = userService.findUserById(userId);
+        if(targetUser == null) {
+            return "redirect:/users";
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("target", targetUser);
+
+        return "users-delete";
+    }
+
+    @PostMapping("delete/{userId}")
+    public String deleteUser(HttpServletRequest request, @PathVariable(name = "userId") long userId) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        userService.deleteUser(userId);
+        return "redirect:/users";
     }
 }

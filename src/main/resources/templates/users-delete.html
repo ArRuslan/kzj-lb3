@@ -1,0 +1,27 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{ layout :: head(~{::title}) }">
+    <title th:text="${'Delete user ' + target.login}"></title>
+</head>
+
+<body th:replace="~{ layout :: body(~{::#th-page-body})}">
+<div id="th-page-body">
+    <h2>Are you sure you want to delete user "<th:block th:text="${target.login}">[User]</th:block>"?</h2>
+
+    <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
+        Error
+    </h3>
+
+    <form action="" method="POST">
+        <div class="btn-group d-flex" role="group">
+            <a role="button" th:href="@{/users}" class="btn btn-danger w-100">Cancel</a>
+            <button type="submit" class="btn btn-warning w-100">Delete</button>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
