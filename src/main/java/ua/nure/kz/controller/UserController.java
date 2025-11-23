@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.nure.kz.dto.UserDTO;
+import ua.nure.kz.mapper.UserMapper;
 import ua.nure.kz.service.UserService;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     // http://localhost:8080/hello
     @RequestMapping("/hello")
