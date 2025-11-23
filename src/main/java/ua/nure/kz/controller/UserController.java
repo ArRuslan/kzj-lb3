@@ -13,7 +13,6 @@ import ua.nure.kz.service.UserService;
 import ua.nure.kz.utils.SessionUtil;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @Controller
 @RequestMapping("users")
