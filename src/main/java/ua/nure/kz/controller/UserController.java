@@ -70,4 +70,25 @@ public class UserController {
 
         return "redirect:/users";
     }
+
+    @GetMapping("{userId}")
+    public String editUserGet(Model model, HttpServletRequest request, @PathVariable(name = "userId") long userId) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        UserDTO targetUser = userService.findUserById(userId);
+        if(targetUser == null) {
+            return "redirect:/users";
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("target", targetUser);
+
+        return "users-edit";
+    }
 }

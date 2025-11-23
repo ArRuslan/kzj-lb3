@@ -1,0 +1,69 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{ layout :: head(~{::title}) }">
+    <title th:text="Edit user ${target.login}"></title>
+</head>
+
+<body th:replace="~{ layout :: body(~{::#th-page-body})}">
+<div id="th-page-body">
+    <h2 th:text="Edit user ${target.login}">Edit user [User]</h2>
+
+    <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
+        Error
+    </h3>
+
+    <form method="POST" action="" class="d-flex row gap-2">
+        <input name="login" placeholder="Login" th:value="${target.getLogin()}" class="form-control" required />
+        <input name="new_password" placeholder="New Password" type="password" class="form-control" />
+        <input name="fullName" placeholder="Full Name" th:value="${target.getFullName()}" class="form-control" required />
+        <select name="role" class="form-control" required>
+            <option value="USER" th:selected="${target.isAdmin() ? '' : 'selected'}">User</option>
+            <option value="Admin" th:selected="${target.isAdmin() ? 'selected' : ''}">Administrator</option>
+        </select>
+
+        <div class="btn-group d-flex" role="group">
+            <a role="button" th:href="@{/users}" class="btn btn-danger w-100">Cancel</a>
+            <button type="submit" class="btn btn-warning w-100">Edit</button>
+        </div>
+    </form>
+
+    <h3>Groups</h3>
+
+    <h4>Add to group</h4>
+    <form method="POST" th:action="@{/users/add-group}" class="d-flex col gap-2">
+        <input type="hidden" name="userId" th:value="${target.getId()}"/>
+        <input name="groupName" placeholder="Group Name" class="form-control"/>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+
+    <table class="table mt-2">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Remove</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <th:block th:each="group : ${target.groups}">
+            <tr>
+                <td th:text="${group.getName()}" scope="row" class="align-middle">Group Name</td>
+                <td>
+                    <form th:action="@{/users/remove-group}" method="POST" class="d-inline">
+                        <input type="hidden" name="userId" th:value="${target.getId()}"/>
+                        <input type="hidden" name="groupId" th:value="${group.getId()}"/>
+                        <button class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>
