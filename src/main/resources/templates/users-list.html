@@ -1,59 +1,75 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>User List</title>
-    <style>
-        .user-list {
-            display: flex ;
-            flex-direction: column;                        
-        }
 
-        .user-header, .user-row {
-            display: flex;
-            padding: 8px;
-            border: 1px solid #ccc;
-        }
-
-        .user-header {
-            font-weight: bold;
-            background-color: #f4f4f4;
-        }
-
-        .user-cell {
-            flex: 1;
-            padding: 0 10px;
-        }
-
-        .no-users {
-            text-align: center;
-            margin-top: 20px;
-            color: #888;
-        }
-    </style>
+<head th:replace="~{ layout :: head(~{::title}) }">
+    <title>Users</title>
 </head>
-<body>
 
-<h2>User List</h2>
+<body th:replace="~{ layout :: body(~{::#th-page-body})}">
+<div id="th-page-body">
+    <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
+        Error
+    </h3>
 
-<div class="user-list" th:if="${users}">
-    <div class="user-header">
-        <div class="user-cell">ID</div>
-        <div class="user-cell">Name</div>
-        <div class="user-cell">Email</div>
-    </div>
+    <th:block th:if="${user.isAdmin()}">
+        <h3>Add user</h3>
+        <form method="POST" th:action="@{/users}" class="d-flex col gap-2">
+            <input name="login" placeholder="Login" class="form-control" />
+            <input name="password" placeholder="Password" type="password" class="form-control" />
+            <input name="fullName" placeholder="Full Name" class="form-control" />
+            <input name="role" placeholder="Role" class="form-control" />
 
-    <div class="user-row" th:each="user : ${users}">
-        <div class="user-cell" th:text="${user.id}">id</div>
-        <div class="user-cell" th:text="${user.login}">login</div>
-        <div class="user-cell" th:text="${user.fullName}">fullName</div>
-    </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </th:block>
+
+    <h2>Users</h2>
+
+    <table class="table mt-2">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Login</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Groups</th>
+            <th th:if="${user.isAdmin()}" scope="col">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <th:block th:each="user, status : ${users}">
+            <tr>
+                <td scope="row" th:text="${user.getId()}">User ID</td>
+                <td th:text="${user.getLogin()}">User Login</td>
+                <td th:text="${user.getFullName()}">User Full Name</td>
+                <td>
+                    <th:block th:each="group : ${user.groups}">
+                        <a th:href="@{/users?groupId=${group.id}}" th:text="${status.last} ? ${group.name} : ${group.name} + ', '">
+                            Group Name
+                        </a>
+                    </th:block>
+                </td>
+                <td th:if="${user.isAdmin()}">
+                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/edit/${user.id}">Edit</a>
+                    <a class="btn btn-danger" href="${pageContext.request.contextPath}/users/delete/${user.id}">Delete</a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <!--
+    <t:pagination
+            hasPrev="${pagination.hasPrev}"
+            hasNext="${pagination.hasNext}"
+            pages="${pagination.pages}"
+            currentPath="${pagination.currentPath}"
+            currentQuery="${pagination.currentQuery}"
+            prevPage="${pagination.prevPage}"
+            nextPage="${pagination.nextPage}"
+            pageSize="${pagination.pageSize}"
+    />
+    -->
 </div>
-
-<div class="no-users" th:if="${users.isEmpty()}">
-    No users found.
-</div>
-
-<hr/>
-
 </body>
+
 </html>

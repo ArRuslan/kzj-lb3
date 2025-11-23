@@ -1,3 +1,5 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="head(title)">
@@ -35,7 +37,7 @@
             <div th:if="${user != null}" class="text-end d-flex gap-1 justify-content-end">
                 <p>
                     You are logged in as user
-                    [${sessionScope.user.getRole().toString()}] <b>${sessionScope.user.getFullName()}</b>
+                    [<th:block th:text="${user.role.toString()}">Role</th:block>] <b th:text="${user.getFullName()}">Full Name</b>
                 </p>
                 <p>
                     <a th:href="@{/auth/logout}">Logout</a>

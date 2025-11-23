@@ -1,5 +1,6 @@
 package ua.nure.kz.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.nure.kz.dto.UserDTO;
 import ua.nure.kz.mapper.UserMapper;
 import ua.nure.kz.service.UserService;
+import ua.nure.kz.utils.SessionUtil;
 
 import java.util.List;
 
-@Controller // <-- @Component
+@Controller
+@RequestMapping("users")
 public class UserController {
 
     @Autowired
@@ -21,10 +24,20 @@ public class UserController {
     private UserMapper userMapper;
 
     // http://localhost:8080/hello
-    @RequestMapping("/hello")
-    @ResponseBody
-    public String hello() {
-        return "Hello, World!";
+    @RequestMapping("")
+    public String usersList(
+            Model model, HttpServletRequest request,
+            @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("users", userService.getUsers(page - 1, pageSize));
+
+        return "users-list";
     }
 
     @RequestMapping("/test")
