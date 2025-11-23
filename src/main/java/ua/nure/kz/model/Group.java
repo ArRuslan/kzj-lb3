@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "groups")
 public class Group {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Setter

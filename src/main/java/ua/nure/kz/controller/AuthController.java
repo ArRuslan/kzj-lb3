@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ua.nure.kz.dto.UserDTO;
 import ua.nure.kz.mapper.UserMapper;
 import ua.nure.kz.model.User;
 import ua.nure.kz.repository.UserRepository;
 import ua.nure.kz.service.UserService;
+import ua.nure.kz.utils.SessionUtil;
 
 @Controller
 @RequestMapping("auth")
 public class AuthController {
 
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -25,6 +29,11 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginGet(HttpServletRequest request) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user != null) {
+            return "redirect:/users";
+        }
+
         return "login";
     }
 
@@ -41,6 +50,7 @@ public class AuthController {
             return "login";
         }
 
+        request.getSession().setAttribute("user", userMapper.toDTO(user));
         return "redirect:/users";
     }
 

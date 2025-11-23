@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Setter
