@@ -6,9 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.nure.kz.dto.GroupDTO;
 import ua.nure.kz.dto.UserDTO;
 import ua.nure.kz.mapper.UserMapper;
+import ua.nure.kz.model.Group;
 import ua.nure.kz.model.User;
+import ua.nure.kz.repository.GroupRepository;
 import ua.nure.kz.repository.UserRepository;
 import ua.nure.kz.service.UserService;
 import ua.nure.kz.utils.SessionUtil;
@@ -23,6 +26,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
     @Autowired
     private UserMapper userMapper;
 
@@ -170,5 +175,70 @@ public class UserController {
 
         userService.deleteUser(userId);
         return "redirect:/users";
+    }
+
+    @PostMapping(value = "add-group", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String addGroupToUser(
+            Model model, HttpServletRequest request,
+            @RequestParam("userId") long userId,
+            @RequestParam("groupName") String groupName) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        User targetUser = userRepository.findUserById(userId);
+        if(targetUser == null) {
+            return "redirect:/users";
+        }
+
+        Group group = groupRepository.findGroupByName(groupName);
+        if(group == null) {
+            model.addAttribute("error", "Unknown group!");
+            model.addAttribute("user", user);
+            model.addAttribute("target", targetUser);
+            return "users-edit";
+        }
+
+        targetUser.getGroups().add(group);
+        userService.updateUser(targetUser);
+
+        return "redirect:/users/edit/" + userId;
+    }
+
+    @PostMapping(value = "remove-group", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String removeGroupFromUser(
+            Model model, HttpServletRequest request,
+            @RequestParam("userId") long userId,
+            @RequestParam("groupId") long groupId) {
+        UserDTO user = SessionUtil.getUserFromSession(request, userService);
+        if(user == null) {
+            return "redirect:/auth/login";
+        }
+        if(!user.isAdmin()) {
+            return "redirect:/users";
+        }
+
+        User targetUser = userRepository.findUserById(userId);
+        if(targetUser == null) {
+            return "redirect:/users";
+        }
+
+        Group group = groupRepository.findGroupById(groupId);
+        if(group == null) {
+            model.addAttribute("error", "Unknown group!");
+            model.addAttribute("user", user);
+            model.addAttribute("target", targetUser);
+            return "users-edit";
+        }
+
+        if(targetUser.getGroups().remove(group)) {
+            userService.updateUser(targetUser);
+        }
+
+        return "redirect:/users/edit/" + userId;
     }
 }
