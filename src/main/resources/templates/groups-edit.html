@@ -1,0 +1,29 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{ layout :: head(~{::title}) }">
+    <title th:text="${'Edit group ' + group.name}"></title>
+</head>
+
+<body th:replace="~{ layout :: body(~{::#th-page-body})}">
+<div id="th-page-body">
+    <h2>Edit user <th:block th:text="${group.name}">[Group]</th:block></h2>
+
+    <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
+        Error
+    </h3>
+
+    <form method="POST" action="" class="d-flex row gap-2">
+        <input name="name" placeholder="Name" th:value="${group.name}" class="form-control" required />
+
+        <div class="btn-group d-flex" role="group">
+            <a role="button" th:href="@{/groups}" class="btn btn-danger w-100">Cancel</a>
+            <button type="submit" class="btn btn-warning w-100">Edit</button>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

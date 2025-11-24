@@ -45,6 +45,14 @@ public class UserService {
         return userMapper.toDTOList(userRepository.findAll(PageRequest.of(page, pageSize, SORT_BY_ID_ASC)).toList());
     }
 
+    public long getUserCount(long groupId) {
+        return userRepository.countUsersByGroupId(groupId);
+    }
+
+    public List<UserDTO> getUsers(long groupId, int page, int pageSize) {
+        return userMapper.toDTOList(userRepository.findUsersByGroupId(groupId, PageRequest.of(page, pageSize, SORT_BY_ID_ASC)));
+    }
+
     @Transactional
     public User createUser(User user) {
         String groupName;

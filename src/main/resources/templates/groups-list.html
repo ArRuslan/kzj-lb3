@@ -1,0 +1,64 @@
+<!--/*@thymesVar id="user" type="ua.nure.kz.dto.UserDTO"*/-->
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{ layout :: head(~{::title}) }">
+    <title>Groups</title>
+</head>
+
+<body th:replace="~{ layout :: body(~{::#th-page-body})}">
+<div id="th-page-body">
+    <h3 th:if="${error != null}" th:text="${error}" style="color: red;">
+        Error
+    </h3>
+
+    <th:block th:if="${user.isAdmin()}">
+        <h3>Add group</h3>
+        <form method="POST" th:action="@{/groups}" class="d-flex col gap-2">
+            <input name="name" placeholder="Name" class="form-control" />
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </th:block>
+
+    <h2>Groups</h2>
+
+    <table class="table mt-2">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th th:if="${user.isAdmin()}" scope="col">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <th:block th:each="group : ${groups}">
+            <tr>
+                <td scope="row" th:text="${group.id}">Group ID</td>
+                <td th:text="${group.name}">Group Name</td>
+                <td th:if="${user.isAdmin()}">
+                    <a class="btn btn-primary" th:href="@{${'/groups/edit/'+group.id}}">Edit</a>
+                    <a class="btn btn-danger" th:href="@{${'/groups/delete/'+group.id}}">Delete</a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <!--
+    <t:pagination
+            hasPrev="${pagination.hasPrev}"
+            hasNext="${pagination.hasNext}"
+            pages="${pagination.pages}"
+            currentPath="${pagination.currentPath}"
+            currentQuery="${pagination.currentQuery}"
+            prevPage="${pagination.prevPage}"
+            nextPage="${pagination.nextPage}"
+            pageSize="${pagination.pageSize}"
+    />
+    -->
+</div>
+</body>
+
+</html>
