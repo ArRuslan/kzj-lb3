@@ -49,9 +49,10 @@
                 <td th:text="${listUser.fullName}">User Full Name</td>
                 <td>
                     <th:block th:each="group, status : ${listUser.groups}">
-                        <a th:href="@{/users(groupId=${group.id})}" th:text="${status.last} ? ${group.name} : ${group.name} + ', '">
+                        <a th:href="@{/users(groupId=${group.id})}" th:text="${group.name}">
                             Group Name
                         </a>
+                        <th:block th:if="${!status.last}">, </th:block>
                     </th:block>
                 </td>
                 <td th:if="${user.isAdmin()}">
@@ -63,18 +64,7 @@
         </tbody>
     </table>
 
-    <!--
-    <t:pagination
-            hasPrev="${pagination.hasPrev}"
-            hasNext="${pagination.hasNext}"
-            pages="${pagination.pages}"
-            currentPath="${pagination.currentPath}"
-            currentQuery="${pagination.currentQuery}"
-            prevPage="${pagination.prevPage}"
-            nextPage="${pagination.nextPage}"
-            pageSize="${pagination.pageSize}"
-    />
-    -->
+    <nav th:replace="pagination :: pagination(${paginationInfo})"></nav>
 </div>
 </body>
 

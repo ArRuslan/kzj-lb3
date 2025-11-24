@@ -13,6 +13,7 @@ import ua.nure.kz.model.User;
 import ua.nure.kz.repository.GroupRepository;
 import ua.nure.kz.repository.UserRepository;
 import ua.nure.kz.service.UserService;
+import ua.nure.kz.utils.Pagination;
 import ua.nure.kz.utils.SessionUtil;
 
 import java.security.NoSuchAlgorithmException;
@@ -28,8 +29,6 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("")
     public String usersList(
@@ -43,14 +42,18 @@ public class UserController {
         }
 
         List<UserDTO> users;
+        long userCount;
         if(groupId > 0) {
             users = userService.getUsers(groupId, page - 1, pageSize);
+            userCount = userService.getUserCount(groupId);
         } else {
             users = userService.getUsers(page - 1, pageSize);
+            userCount = userService.getUserCount();
         }
 
         model.addAttribute("user", user);
         model.addAttribute("users", users);
+        model.addAttribute("paginationInfo", Pagination.make(page, pageSize, userCount, groupId > 0 ? ("groupId=" + groupId) : ""));
 
         return "users-list";
     }

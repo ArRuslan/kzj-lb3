@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
+
+<nav th:fragment="pagination(info)">
+    <!--/*@thymesVar id="info" type="ua.nure.kz.utils.Pagination"*/-->
+    <ul class="pagination mb-0">
+        <li class="page-item">
+            <a
+                    class="page-link"
+                    th:classappend="${!info.hasPrev} ? 'disabled'"
+                    th:href="@{''(page=${info.prevPage}, pageSize=${info.pageSize})} + '&' + ${info.addQuery}"
+                    th:disabled="${!info.hasPrev} ? 'disabled'">
+                Previous
+            </a>
+        </li>
+
+        <th:block th:each="page : ${info.pages}">
+            <li class="page-item">
+                <a
+                        class="page-link"
+                        th:classappend="${page.isCurrent} ? 'active'"
+                        th:href="@{''(page=${page.num}, pageSize=${info.pageSize})} + '&' + ${info.addQuery}"
+                        th:text="${page.num}">
+                    0
+                </a>
+            </li>
+        </th:block>
+
+        <li class="page-item">
+            <a
+                    class="page-link"
+                    th:classappend="${!info.hasNext} ? 'disabled'"
+                    th:href="@{''(page=${info.nextPage}, pageSize=${info.pageSize})} + '&' + ${info.addQuery}"
+                    th:disabled="${!info.hasNext} ? 'disabled'">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
 
 </body>
 </html>
