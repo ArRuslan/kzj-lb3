@@ -29,6 +29,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping("")
     public String usersList(
@@ -210,7 +212,7 @@ public class UserController {
         if(group == null) {
             model.addAttribute("error", "Unknown group!");
             model.addAttribute("user", user);
-            model.addAttribute("target", targetUser);
+            model.addAttribute("target", userMapper.toDTO(targetUser));
             return "users-edit";
         }
 
@@ -242,7 +244,7 @@ public class UserController {
         if(group == null) {
             model.addAttribute("error", "Unknown group!");
             model.addAttribute("user", user);
-            model.addAttribute("target", targetUser);
+            model.addAttribute("target", userMapper.toDTO(targetUser));
             return "users-edit";
         }
 

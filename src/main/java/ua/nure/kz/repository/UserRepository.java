@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ua.nure.kz.model.Group;
 import ua.nure.kz.model.User;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT COUNT(u) FROM User u JOIN u.groups g WHERE g.id = :group_id")
     long countUsersByGroupId(@Param("group_id") long groupId);
+
+    List<User> findAllByGroupsContains(Group group);
 
 }

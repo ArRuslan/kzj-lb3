@@ -2,6 +2,8 @@ package ua.nure.kz.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 
@@ -20,7 +22,4 @@ public class Group {
 	@Setter
 	@Column(unique = true, nullable = false)
 	private String name;
-
-	/*@ManyToMany(mappedBy = "groups")
-	private Set<User> users;*/
 }
